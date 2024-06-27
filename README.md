@@ -1,7 +1,7 @@
 This is a simple example of the implementation and use of the ARIA dialog API.
 
 The abstract base class to inherit and implement can be found here:
-./src/aria_dailog_api/aria_dialog_api_base.py
+[./src/aria_dailog_api/aria_dialog_api_base.py](./src/aria_dailog_api/aria_dialog_api_base.py)
 
 You can find an example implementation, using a local installation of llama2 here:
 ./src/aria_dailog_api/aria_dialog_api_base.py
