@@ -20,23 +20,10 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         self.chat = self.generator.start_chat(history=[])
         return True
     def GetResponse(self, text):
-        htmltext = convert_text_to_html(text)
-        return {'success': True,
-                'response': htmltext}
-
-class AuthGemini_ARIADialogAPI(AriaDialogAPI):
-
-    def OpenSession(self, auth):
-
-    def CloseSession(self, destroy_generator=False):
-        if destroy_generator:
-            self.generator = None
-            self.chat = None
-        else:
-            self.chat = self.generator.start_chat(history=[])
-    def GetResponse(self, text):
         response = self.chat.send_message(text, stream=True)
         text = ''
         for chunk in response:
             text += chunk.text
-        return text
+        htmltext = convert_text_to_html(text)
+        return {'success': True,
+                'response': htmltext}
