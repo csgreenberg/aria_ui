@@ -1,4 +1,5 @@
-from aria_dialog_api_local_lamma import LocalLlama_ARIADialogAPI as ARDI_API
+
+from aria_dialog_api_parrot import Parrot_ARIADialogAPI as ARDI_API
 
 RESTART_CMD_STRING = "!RESTART"
 USER_PROMPT = "You: "
@@ -9,7 +10,7 @@ def request_restart(user_response):
 def repl(auth=None):
     welcome_string = \
         f"Welcome to a simple aria dialog system repl! Engage in a dialog.\nEnter the following "\
-        "command to restart your dialog: {RESTART_CMD_STRING}. Press Ctrl+D to exit.\n"
+        f"command to restart your dialog: {RESTART_CMD_STRING}. Press Ctrl+D to exit.\n"
     exit_string = "\nThank you for using a simple aria dialog system repl!"
     ardi_api = ARDI_API()
     ardi_api.OpenSession(auth)
