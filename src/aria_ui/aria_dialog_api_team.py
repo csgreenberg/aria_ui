@@ -8,9 +8,8 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         self.generator = None
         self.chat = None
     def OpenConnection(self, auth=None):
-        if not self.generator:
-            genai.configure(api_key=auth['api_key'])
-            self.generator = genai.GenerativeModel('gemini-1.5-flash')
+        genai.configure(api_key=auth['api_key'])
+        self.generator = genai.GenerativeModel('gemini-1.5-flash')
         return True
     def CloseConnection(self):
         self.generator = None
