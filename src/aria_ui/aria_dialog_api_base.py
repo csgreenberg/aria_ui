@@ -13,5 +13,3 @@ class AriaDialogAPI(ABC):
     @abstractmethod
     def GetResponse(text):
         raise NotImplementedError
-
-
