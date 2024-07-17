@@ -17,11 +17,12 @@ def convert_text_to_html(text):
     for line in text.splitlines():
         line = html.escape(line)
         htmltext += (line + '<br>')
+    htmltext = htmltext[:-len('<br>')]
     htmltext += '</pre>'
     return htmltext
 
 def convert_html_to_text(htmltext):
-    text = htmltext.lstrip("<!DOCTYPE html> <pre>").rstrip('</pre>')
+    text = htmltext[len("<!DOCTYPE html> <pre>"):-len('</pre>')]
     text = html.unescape(text)
     text = text.replace('<br>', '\n')
     return text
