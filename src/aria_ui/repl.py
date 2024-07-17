@@ -24,8 +24,7 @@ def repl(ARDI_API, auth=None):
             print(exit_string)
             continue
         if request_restart(user_response):
-            ardi_api.CloseConnection()
-            ardi_api.OpenConnection(auth)
+            ardi_api.StartSession()
             print(welcome_string)
             continue
         llm_response = ardi_api.GetResponse(user_response)
