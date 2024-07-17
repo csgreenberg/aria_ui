@@ -1,4 +1,4 @@
-from sys import exit
+import sys
 
 RESTART_CMD_STRING = "!RESTART"
 USER_PROMPT = "You: "
@@ -14,10 +14,10 @@ def repl(ARDI_API, auth=None):
     ardi_api = ARDI_API()
     if not ardi_api.OpenConnection(auth):
         print('Cannot establish connection!')
-        exit(1)
+        sys.exit(1)
     if not ardi_api.StartSession():
         print('Session Start Failed!')
-        exit(1)
+        sys.exit(1)
     print(welcome_string)
     loop = True
     while loop is True:
@@ -31,7 +31,7 @@ def repl(ARDI_API, auth=None):
         if request_restart(user_response):
             if not ardi_api.StartSession():
                 print('Session Start Failed!')
-                exit(1)
+                sys.exit(1)
             print(welcome_string)
             continue
         llm_response = ardi_api.GetResponse(user_response)
@@ -44,5 +44,5 @@ if __name__ == '__main__':
         auth = get_auth()
     except ValueError as e:
         print("Exiting")
-        exit(1)
+        sys.exit(1)
     repl(ARDI_API, auth)
