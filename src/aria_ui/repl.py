@@ -1,4 +1,4 @@
-
+from sys import exit
 
 RESTART_CMD_STRING = "!RESTART"
 USER_PROMPT = "You: "
@@ -12,19 +12,26 @@ def repl(ARDI_API, auth=None):
         f"command to restart your dialog: {RESTART_CMD_STRING}. Press Ctrl+D to exit.\n"
     exit_string = "\nThank you for using a simple aria dialog system repl!"
     ardi_api = ARDI_API()
-    ardi_api.OpenConnection(auth)
+    if not ardi_api.OpenConnection(auth):
+        print('Cannot establish connection!')
+        exit(1)
+    if not ardi_api.StartSession():
+        print('Session Start Failed!')
+        exit(1)
     print(welcome_string)
-    exit = False
-    while exit is False:
+    loop = True
+    while loop is True:
         try:
             user_response = input(USER_PROMPT)
         except EOFError:
-            ardi_api.CloseConnection(destroy_generator=True)
-            exit = True
+            ardi_api.CloseConnection()
+            loop = False
             print(exit_string)
             continue
         if request_restart(user_response):
-            ardi_api.StartSession()
+            if not ardi_api.StartSession():
+                print('Session Start Failed!')
+                exit(1)
             print(welcome_string)
             continue
         llm_response = ardi_api.GetResponse(user_response)
