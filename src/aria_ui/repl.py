@@ -1,6 +1,8 @@
 
 import sys
 
+from utils import convert_html_to_text
+
 RESTART_CMD_STRING = "!RESTART"
 USER_PROMPT = "You: "
 DS_PROMPT = "Dialog System: "
@@ -36,7 +38,11 @@ def repl(ARDI_API, auth=None):
             print(welcome_string)
             continue
         llm_response = ardi_api.GetResponse(user_response)
-        print(f'\n{DS_PROMPT}{llm_response}\n')
+        if not llm_response['success'] is True:
+            llm_response_text = '[LLM DID NOT SUCCESSFULLY RESPOND]'
+        else:
+            llm_response_text = convert_html_to_text(llm_response['response'])
+        print(f'\n{DS_PROMPT}{llm_response_text}\n')
 
 if __name__ == '__main__':
     from aria_dialog_api_team import Team_ARIADialogAPI as ARDI_API
