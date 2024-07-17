@@ -1,4 +1,3 @@
-
 from utils import convert_text_to_html
 from aria_dialog_api_base import AriaDialogAPI
 
