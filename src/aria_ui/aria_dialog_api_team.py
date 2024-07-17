@@ -7,6 +7,8 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         return True
     def CloseConnection(self):
         return True
+    def GetVersion():
+        return '0.1'
     def StartSession(self):
         return True
     def GetResponse(self, text):
