@@ -20,18 +20,8 @@ def convert_text_to_html(text):
     htmltext = htmltext[:-len('<br>')]
     htmltext += '</pre>'
     return htmltext
-
 def convert_html_to_text(htmltext):
     text = htmltext[len("<!DOCTYPE html> <pre>"):-len('</pre>')]
     text = html.unescape(text)
     text = text.replace('<br>', '\n')
     return text
-
-
-if __name__=='__main__':
-    with open('/tmp/x.txt') as f:
-        text = f.read()
-        htmltext = convert_text_to_html(text)
-        print(htmltext)
-        with open('/tmp/y.html', 'w') as g:
-            g.write(htmltext)
