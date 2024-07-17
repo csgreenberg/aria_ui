@@ -15,6 +15,8 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         self.generator = None
         self.chat = None
         return True
+    def GetVersion():
+        return 'V0.1'
     def StartSession(self):
         self.chat = self.generator.start_chat(history=[])
         return True
