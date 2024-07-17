@@ -2,13 +2,14 @@ from abc import ABC, abstractmethod
 
 class AriaDialogAPI(ABC):
     @abstractmethod
-    def OpenSession(auth=None):
+    def OpenConnection(auth=None):
         raise NotImplementedError
-
     @abstractmethod
-    def CloseSession():
+    def CloseConnection():
         raise NotImplementedError
-
+    @abstractmethod
+    def StartSession():
+        raise NotImplementedError
     @abstractmethod
     def GetResponse(text):
         raise NotImplementedError

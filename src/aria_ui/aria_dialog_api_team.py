@@ -1,10 +1,15 @@
 
+from utils import convert_text_to_html
 from aria_dialog_api_base import AriaDialogAPI
 
 class Team_ARIADialogAPI(AriaDialogAPI):
-    def OpenSession(self, auth=None):
-        return
-    def CloseSession(self, destroy_generator=False):
-        return
+    def OpenConnection(self, auth=None):
+        return True
+    def CloseConnection(self, destroy_generator=False):
+        return True
+    def StartSession():
+        return True
     def GetResponse(self, text):
-        return text
+        htmltext = convert_text_to_html(text)
+        return {'success': True,
+                'response': htmltext}
