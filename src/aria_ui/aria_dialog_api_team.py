@@ -7,7 +7,7 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         return True
     def CloseConnection(self):
         return True
-    def StartSession():
+    def StartSession(self):
         return True
     def GetResponse(self, text):
         htmltext = convert_text_to_html(text)
