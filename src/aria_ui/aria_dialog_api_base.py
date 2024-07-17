@@ -8,6 +8,9 @@ class AriaDialogAPI(ABC):
     def CloseConnection():
         raise NotImplementedError
     @abstractmethod
+    def GetVersion():
+        raise NotImplementedError
+    @abstractmethod
     def StartSession():
         raise NotImplementedError
     @abstractmethod
