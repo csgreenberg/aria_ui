@@ -1,59 +1,52 @@
+import time
+import os
+import json
+from datetime import datetime
+
 import streamlit as st
 from streamlit_javascript import st_javascript
-from urllib.parse import urlparse
-from urllib.parse import parse_qs
-
-import random
-import time
 
 
 # import API implementation
 from aria_dialog_api_team import Team_ARIADialogAPI as ARDI_API
+import utilities as util
 
-# Streamed response emulator
-def response_generator():
-    response = random.choice(
-        [
-            "Hello there! How can I assist you today?",
-            "Hi, human! Is there anything I can help you with?",
-            "Do you need help?",
-        ]
-    )
-    for word in response.split():
-        yield word + " "
-        time.sleep(0.05)
+#### Get the ARIA-UI Environment Variables
+# ARIA_UI_PUBLIC_KEY_JSON  = a json string holding the two values of an RSA public key {'n': "...", 'e': ".."}
+# ARIA_UI_PRIVATE_KEY_JSON = a json string holding the four values of an RSA public key {'n': "...", 'e': "..", 'd': "..", 'p': "..", 'q': "..", 'rs': ".."}
+# ARIA_TEAM_AUTH_JSON      = a json string holding the authentication codes for a team's implementation
+# ARIA_INFO_STRING         = a colon separated text string defining the mode of the UI's operation.  This is
+#                            either set on the command line for debugging or sent in a URL parameter called
+#                            'info'.
 
-### Look for USER ID via <URL>/?userid=302-billy&sessionid=9001
-userid = None
+ARIA_UI_PUBLIC_KEY = util.make_PublicKey(util.get_env_json_as_dict("ARIA_UI_PUBLIC_KEY_JSON"))
+ARIA_UI_PRIVATE_KEY = util.make_PrivateKey(util.get_env_json_as_dict("ARIA_UI_PRIVATE_KEY_JSON"))
+ARIA_TEAM_AUTH = util.get_env_json_as_dict("ARIA_TEAM_AUTH_JSON")
+ARIA_INFO = util.get_env_string("ARIA_INFO_STRING")
+URL_ARIA_INFO = util.extract_param_from_url('info')
 
-url = st_javascript("await fetch('').then(r => window.parent.location.href)")
-parsed_url = urlparse(url)
-query_dict = parse_qs(parsed_url.query)
-if ('userid' in query_dict):
-    userid = query_dict['userid'][0]
+### parse the info strings.  The env version takes priorityo
+state, eval_mode, user_id, session_id = util.parse_info_str("")  ### Set the defaults
+if (ARIA_INFO != ""):
+    state, eval_mode, user_id, session_id = util.parse_info_str(ARIA_INFO)
+elif (URL_ARIA_INFO != ""):
+    print(util.get_env_json_as_dict("ARIA_UI_PRIVATE_KEY_JSON"))
+    dec_info = util.decrypt_info_str(URL_ARIA_INFO, ARIA_UI_PRIVATE_KEY)
+    state, eval_mode, user_id, session_id = util.parse_info_str(dec_info)
     
+if (state == "DISABLED"):
+    exit(1)
 
+### Setup the UI
+session_id = "foo" #get_session_id()
+
+### Begin the UI
 st.title("ARIA: Assessing Risks of AI")
-st.header(f'User /{userid}/ Testing - Demo1')
-
-# define auth used by API implementation
-import os
-import json
-AUTH_ENV_VAR = 'ARIA_AUTH_JSON'
-auth_json = os.getenv(AUTH_ENV_VAR)
-auth = {}  ### The default
-if (auth_json is not None):
-    try:
-        auth = json.loads(auth_json)
-        print(f"Auth Dictionary: {auth}")
-    except ValueError as e:
-        print(f"Error parsing JSON string /{auth_json}/ error {e}.")
-        print("Exiting")
-        exit(1)
+st.header(f'Demo1: User /{user_id}/ sessionid /{session_id}/')
 
 # Instantiate the API and authenticate
 ardi_api = ARDI_API()
-ardi_api.OpenConnection(auth)
+ardi_api.OpenConnection(ARIA_TEAM_AUTH)
 ardi_api.StartSession()
 
 # Initialize chat history
@@ -74,8 +67,6 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     # Display assistant response in chat message container
-#    with st.chat_message("assistant"):
-#        response = st.write_stream(response_generator())
     with st.chat_message("assistant"):
         response = ardi_api.GetResponse(prompt)
         st.write(response)
