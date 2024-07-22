@@ -26,51 +26,52 @@ ARIA_INFO = util.get_env_string("ARIA_INFO_STRING")
 URL_ARIA_INFO = util.extract_param_from_url('info')
 
 ### parse the info strings.  The env version takes priorityo
-state, eval_mode, user_id, session_id = util.parse_info_str("")  ### Set the defaults
+state, eval_mode, user_id, assignment_id = util.parse_info_str("")  ### Set the defaults
 if (ARIA_INFO != ""):
-    state, eval_mode, user_id, session_id = util.parse_info_str(ARIA_INFO)
+    state, eval_mode, user_id, assignment_id = util.parse_info_str(ARIA_INFO)
 elif (URL_ARIA_INFO != ""):
-    print(util.get_env_json_as_dict("ARIA_UI_PRIVATE_KEY_JSON"))
     dec_info = util.decrypt_info_str(URL_ARIA_INFO, ARIA_UI_PRIVATE_KEY)
-    state, eval_mode, user_id, session_id = util.parse_info_str(dec_info)
+    state, eval_mode, user_id, assignment_id = util.parse_info_str(dec_info)
     
 if (state == "DISABLED"):
-    exit(1)
+    st.title("ARIA: Assessing Risks of AI")
+    st.header(f'Unfortunately, the application was not passed the appropriate information to start.  Please contact NIST if you did not expect this error.')
+else:
+    ### Begin the UI
+    st.title("ARIA: Assessing Risks of AI")
+    st.header(f'Demo1: User /{user_id}/ assignment /{assignment_id}/')
 
-### Setup the UI
-session_id = "foo" #get_session_id()
+    # Instantiate the API and authenticate
+    ardi_api = ARDI_API()
+    ardi_api.OpenConnection(ARIA_TEAM_AUTH)
+    ardi_api.StartSession()
 
-### Begin the UI
-st.title("ARIA: Assessing Risks of AI")
-st.header(f'Demo1: User /{user_id}/ sessionid /{session_id}/')
-
-# Instantiate the API and authenticate
-ardi_api = ARDI_API()
-ardi_api.OpenConnection(ARIA_TEAM_AUTH)
-ardi_api.StartSession()
-
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Display chat messages from history on app rerun
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# Accept user input
-if prompt := st.chat_input("What is up?"):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        response = ardi_api.GetResponse(prompt)
-        st.write(response)
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
     
-    # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    # Display chat messages from history on app rerun
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Accept user input
+    if prompt := st.chat_input("What is up?"):
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            response_info = ardi_api.GetResponse(prompt)
+            if (response_info['success']):
+                st.write(response_info['response'])
+            else:
+                st.write("Error: model did not return a response  Contact NIST")
+                
+    
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response_info['response']})
 

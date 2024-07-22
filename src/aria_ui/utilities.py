@@ -25,7 +25,6 @@ def get_env_json_as_dict(env_var):
     if (json_str is not None):
         try:
             dic = json.loads(json_str)
-            print(f"Env Dictionary: {env_var}={dict}")
         except ValueError as e:
             print(f"Error parsing JSON string /{json_str}/ error {e}.")
             print("Aborting")
@@ -46,7 +45,7 @@ def get_env_string(env_var):
 #################################################################
 
 #### The INFO String Definition
-### <STATE>:<EVALMODE>:<USERID>:<SESSION>
+### <STATE>:<EVALMODE>:<USERID>:<ASSIGNMENT>
 #### <STATE>: ARIA UI States of operation
 #       DISABLED [default] = info string is empty or not parsable.
 #       DEBUG = This runs the application but saves no logs
@@ -58,18 +57,18 @@ def get_env_string(env_var):
 #       redteam = ruun as a red teamer
 #       field = run as a field tester
 ### <USERID>: The string of the USER ID
-### <SESSIONID>: The string of the SESSION ID
+### <ASSIGNMENTID>: The string of the ASSIGNMENT ID
 
 #################################################################
-#### get the unique session id for this application exec.
-def get_session_id(user_id):
+#### get the unique assignment id for this application exec.
+def get_assignment_id(user_id):
     pid = os.getpid()
     return(f"{user_id}_{datetime.today().strftime('%Y-%m-%d')}-{pid:07d}")
 
 #################################################################
 #### build the information string
 def build_info_str(state, user_id, eval_mode):
-    return(f"{state}:{eval_mode}:{user_id}:{get_session_id(user_id)}")
+    return(f"{state}:{eval_mode}:{user_id}:{get_assignment_id(user_id)}")
 
 #################################################################
 #### build the information string
@@ -83,16 +82,16 @@ def parse_info_str(info_str):
     info_arr = info_str.split(':')
     
     if (len(info_arr) != 4):
-        print(f"Error: info string /{info_str}/ requires four values: <STATE>:<EVALMODE>:<USERID>:<SESSION> but {len(info_arr)} where found.  Aborting.")
+        print(f"Error: info string /{info_str}/ requires four values: <STATE>:<EVALMODE>:<USERID>:<ASSIGNMENT> but {len(info_arr)} where found.  Aborting.")
         exit(1)
-    state, eval_mode, user_id, session = info_arr
+    state, eval_mode, user_id, assignment = info_arr
     if (state not in states):
         print(f"Error: The state /{state}/ in info string /{info_str}/ is not one of {states}. Aborting")
         exit(1)
     if (eval_mode not in eval_modes):
         print(f"Error: The eval_mode /{eval_mode}/ in info string /{info_str}/ is not one of {eval_modes}. Aborting")
         exit(1)
-    return([state, eval_mode, user_id, session])
+    return([state, eval_mode, user_id, assignment])
 
 #################################################################
 #### encrypt the info str with the passed public key
@@ -138,7 +137,7 @@ def make_public_private_envs():
     priv = json.dumps({"n": privateKey.n, "e": privateKey.e, "d": privateKey.d, "p": privateKey.p, "q": privateKey.q}, separators=(',', ':'))
 
     
-    enc = encrypt_info_str("DEBUG:model:user1:session", publicKey).hex()
+    enc = encrypt_info_str("DEBUG:model:user1:assignment1", publicKey).hex()
     print(f"export ARIA_UI_PUBLIC_KEY_JSON='{pub}'")
     print(f"export ARIA_UI_PRIVATE_KEY_JSON='{priv}'")
     print("export ARIA_AUTH_JSON='{}'")
