@@ -22,7 +22,7 @@ class AriaDialogAPI(ABC):
         Returns a response to text prompt.
     """
     @abstractmethod
-    def OpenConnection(auth=None):
+    def OpenConnection(self, auth=None):
         """Opens a connection to the application.
 
         If the argument `auth` isn't passed in, no authorization is attempted.
@@ -44,7 +44,7 @@ class AriaDialogAPI(ABC):
         """
         raise NotImplementedError
     @abstractmethod
-    def CloseConnection():
+    def CloseConnection(self):
         """Closes an open connection to the application.
 
         Parameters
@@ -63,7 +63,7 @@ class AriaDialogAPI(ABC):
         """
         raise NotImplementedError
     @abstractmethod
-    def GetVersion():
+    def GetVersion(self):
         """Returns the version of the API implementation.
 
         Parameters
@@ -82,7 +82,7 @@ class AriaDialogAPI(ABC):
         """
         raise NotImplementedError
     @abstractmethod
-    def StartSession():
+    def StartSession(self):
         """Starts a new dialog session.
 
         Parameters
@@ -101,7 +101,7 @@ class AriaDialogAPI(ABC):
         """
         raise NotImplementedError
     @abstractmethod
-    def GetResponse(text):
+    def GetResponse(self, text):
         """Returns a response to text prompt.
 
         Parameters
