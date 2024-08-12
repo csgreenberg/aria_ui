@@ -4,7 +4,25 @@ from aria_dialog_api_base import AriaDialogAPI
 
 class Team_ARIADialogAPI(AriaDialogAPI):
     """This is a simple example of a class that inherits AriaDialogAPI and implements the ARIA
-    dialog API for a toy model that echos back whatever prompt is given."""
+    dialog API for a toy model that echos back whatever prompt is given.
+
+    Attributes
+    ----------
+    None
+
+    Methods
+    -------
+    OpenConnection(auth=None)
+        Opens a connection to the application.
+    CloseConnection()
+        Closes an open connection to the application.
+    GetVersion():
+        Returns the version of the API implementation.
+    StartSession():
+        Starts a new dialog session.
+    GetResponse(text):
+        Returns a response to text prompt.
+    """
     model_name = 'Echo'
     def OpenConnection(self, auth=None):
         """Opens a connection to the application.
