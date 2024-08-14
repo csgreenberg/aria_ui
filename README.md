@@ -12,10 +12,3 @@ To run the text-basd (REPL) interface, execute the python script [src/aria_dialo
 
 To run the UIUX, execute: `ARIA_AUTH_JSON='{}' streamlit run app.py`.
 
-To deploy the UIUX do the following:
-- Get an API key for Posit Connect "POSIT_API"
-- cd into src/aria_dialog_api
-- Define the Post Connect Server: 1rsconnect add --server https://miganalytics.nist.gov  --name miganalytics --api-key POSIT_API`
-- execute: `rsconnect deploy streamlit -N -t uiux-parrot -n miganalytics  .`
-
-Note that you may need to set enviornment variables, for example for api_keys or model varaibles.  For more information and to determine what's needed in your case, see the relevant examples.
