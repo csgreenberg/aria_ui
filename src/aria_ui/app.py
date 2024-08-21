@@ -53,7 +53,8 @@ if (auth_json is not None):
 
 # Instantiate the API and authenticate
 ardi_api = ARDI_API()
-ardi_api.OpenSession(auth)
+ardi_api.OpenConnection(auth)
+ardi_api.StartSession()
 
 # Initialize chat history
 if "messages" not in st.session_state:

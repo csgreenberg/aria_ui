@@ -63,8 +63,8 @@ def repl(ARDI_API, experiment_id, auth=None):
     session_num = 0
     adjpair_num = 0
     # log experiment metadata
-    metadata_dict = {'model_name': ARDI_API.model_name,
-                    'api_version': ARDI_API.GetVersion()}
+    metadata_dict = {'model_name': ardi_api.model_name,
+                    'api_version': ardi_api.GetVersion()}
     log_experiment(experiment_id, metadata_dict)
     # open a connection to the app
     os_success = open_connection()
