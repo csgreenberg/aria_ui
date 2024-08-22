@@ -47,7 +47,6 @@ class Team_ARIADialogAPI(AriaDialogAPI):
            a boolean value indicating whether the connection was successfully opened
        """
         
-        print(f"Using API_KEY {auth['api_key']}")        
         genai.configure(api_key=auth['api_key'])
         self.generator = genai.GenerativeModel('gemini-1.5-flash')
         return True
