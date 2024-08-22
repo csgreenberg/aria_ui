@@ -78,7 +78,7 @@ class Team_ARIADialogAPI(AriaDialogAPI):
         string
             a string indicating the version of the API implementation.
         """
-        return '0.1'
+        return 'GeminiDemo_v1.2'
     def StartSession(self):
         """Starts a new dialog session.
 
