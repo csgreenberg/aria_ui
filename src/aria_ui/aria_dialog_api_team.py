@@ -2,6 +2,7 @@
 from aria_dialog_api_base import AriaDialogAPI
 import google.generativeai as genai
 from utils import convert_text_to_html
+import json
 
 class Team_ARIADialogAPI(AriaDialogAPI):
     """This is a simple example of a class that inherits AriaDialogAPI and implements the ARIA
@@ -45,6 +46,8 @@ class Team_ARIADialogAPI(AriaDialogAPI):
        bool
            a boolean value indicating whether the connection was successfully opened
        """
+        
+        print(f"Using API_KEY {auth['api_key']}")        
         genai.configure(api_key=auth['api_key'])
         self.generator = genai.GenerativeModel('gemini-1.5-flash')
         return True
@@ -105,10 +108,14 @@ class Team_ARIADialogAPI(AriaDialogAPI):
              a dictionary with keys "success" and "response" with values indicating whether the app
              successfully returned a response and the response itself in html format, respectively.
          """
-        response = self.chat.send_message(text, stream=True)
-        text = ''
-        for chunk in response:
-            text += chunk.text
-        htmltext = convert_text_to_html(text)
+        response = self.generator.generate_content(text)
+        response_dict = response.to_dict()
+        
+        outtext = ""
+        for cand in (response_dict['candidates']):
+            for cont in cand['content']['parts']:
+                outtext += cont['text']
+                
+                htmltext = convert_text_to_html(outtext)
         return {'success': True,
                 'response': htmltext}
