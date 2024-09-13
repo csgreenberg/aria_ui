@@ -106,7 +106,7 @@ def repl(ARDI_API, experiment_id, auth=None):
         if not llm_response['success'] is True:
             llm_response_text = '[LLM DID NOT SUCCESSFULLY RESPOND]'
         else:
-            llm_response_text = convert_html_to_text(llm_response['response'])
+            llm_response_text = llm_response['response']
         log_dialog_turn(experiment_id, session_num, adjpair_num, user_response, llm_response)
         print(f'\n{DS_PROMPT}{llm_response_text}\n')
 

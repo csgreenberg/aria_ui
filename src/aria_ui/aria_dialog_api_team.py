@@ -76,8 +76,7 @@ class Team_ARIADialogAPI(AriaDialogAPI):
          -------
          dictionary
              a dictionary with keys "success" and "response" with values indicating whether the app
-             successfully returned a response and the response itself in html format, respectively.
+             successfully returned a response and the response itself in text or markdown text format, respectively.
          """
-        htmltext = convert_text_to_html(text)
         return {'success': True,
-                'response': htmltext}
+                'response': text}

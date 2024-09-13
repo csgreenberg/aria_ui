@@ -113,7 +113,7 @@ class AriaDialogAPI(ABC):
         -------
         dictionary
             a dictionary with keys "success" and "response" with values indicating whether the app
-            successfully returned a response and the response itself in html format, respectively.
+            successfully returned a response and the response itself in text or markdown text format, respectively.
 
         Raises
         ------
