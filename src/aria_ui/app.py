@@ -28,9 +28,10 @@ if (auth_json is not None):
         exit(1)
 
 # Instantiate the API and authenticate
-ardi_api = ARDI_API()
-ardi_api.OpenConnection(auth)
-ardi_api.StartSession()
+if "api" not in st.session_state:
+    st.session_state.api = ARDI_API()
+    st.session_state.api.OpenConnection(auth)
+    st.session_state.api.StartSession()
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -51,7 +52,7 @@ if prompt := st.chat_input("What is up?"):
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        response = ardi_api.GetResponse(prompt)
+        response = st.session_state.api.GetResponse(prompt)
         st.write(response['response'])
     
     # Add assistant response to chat history
